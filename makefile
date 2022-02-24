@@ -8,31 +8,31 @@ CFLAGS_LIB=-Wall -I$(INC) -fPIC -shared
 
 
 # =============== LIBRARY COMPILATION ===============
-Inspection: src/Inspection.c include/Inspection.h
-	$(CC) $(CFLAGS_LIB) src/$@.c -o lib/lib$@.so
-
+Inspection: src/Constructor.c include/Constructor.h
+	$(CC) $(CFLAGS_LIB) $< -o lib/libinspection.so
+	$(CC) src/$@.c -o bin/inspection
 
 # =============== LIBRARY INSTALLATION ===============
 install: Inspection
-	cp lib/libInspection.so /usr/local/lib
+	cp lib/libinspection.so /usr/local/lib
+	cp bin/inspection /usr/local/bin
 uninstall:
-	rm -f /usr/local/lib/libInspection.so
+	rm -f /usr/local/lib/libinspection.so
+	rm -f /usr/local/bin/inspection
 
 
 # ====================== TESTS ======================
-fopen: test/fopen.c
-	$(CC) $< -o bin/fopen
-test2: test/test2.c
-	$(CC) $< -o bin/test2
-TESTS:fopen test2
+loop: test/loop.c
+	$(CC) $< -o bin/loop
+TESTS: loop
 
 
 # ==================== RUN TESTS ====================
 check: Inspection TESTS
-	LD_PRELOAD=./lib/libInspection.so bin/fopen
-	LD_PRELOAD=./lib/libInspection.so bin/test2
-
+	bin/inspection bin/loop
+#LD_PRELOAD=./lib/libinspection.so bin/loop
 
 # CLEAN
 clean:
 	rm -f bin/* lib/*
+.PHONY: clean
