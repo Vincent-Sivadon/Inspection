@@ -12,6 +12,13 @@ Inspection: src/Inspection.c include/Inspection.h
 	$(CC) $(CFLAGS_LIB) src/$@.c -o lib/lib$@.so
 
 
+# =============== LIBRARY INSTALLATION ===============
+install: Inspection
+	cp lib/libInspection.so /usr/local/lib
+uninstall:
+	rm -f /usr/local/lib/libInspection.so
+
+
 # ====================== TESTS ======================
 fopen: test/fopen.c
 	$(CC) $< -o bin/fopen
@@ -24,7 +31,6 @@ TESTS:fopen test2
 check: Inspection TESTS
 	LD_PRELOAD=./lib/libInspection.so bin/fopen
 	LD_PRELOAD=./lib/libInspection.so bin/test2
-
 
 
 # CLEAN
