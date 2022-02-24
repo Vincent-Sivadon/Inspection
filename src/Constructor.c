@@ -14,9 +14,6 @@ void plop(int sig, siginfo_t *info, void *ctx)
 
 /* Dynamic Library Constructor */
 static void lib_init(void) {
-    printf("\n=============== INSPECTION ===============\n\n");
-    fflush(stdout);
-
 	struct sigaction act;
 
 	memset(&act, 0, sizeof(struct sigaction));

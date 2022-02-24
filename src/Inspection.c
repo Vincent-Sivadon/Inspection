@@ -1,5 +1,3 @@
-#include "../include/Inspection.h"
-
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
@@ -22,6 +20,16 @@ char * const getLibPath()
     }
 }
 
+void processInput(const char * input)
+{
+    char i = input[0];
+    switch (i)
+    {
+        case 'r':
+            break;
+    }
+}
+
 int main(int argc, char **argv)
 {
     // Check inspection call
@@ -37,10 +45,19 @@ int main(int argc, char **argv)
     strcat(env, ld_preload); strcat(env, libPath);
 
 
-    // Run prog with inspection preloaded
+    // Set up for running the prog with inspection preloaded
     char * binary = argv[1];
     char *const args[] = {binary, NULL};
     char *const envs[] = {env,NULL};
+
+    // User input (decides to run the prog)
+    char * input;
+    printf("\n--- Inspection ---\n\n");
+    printf("-> ");
+    scanf("%c", input);  
+    processInput(input);
+
+    // Run prog
     execve(argv[1],args,envs);
 
     return 0;
