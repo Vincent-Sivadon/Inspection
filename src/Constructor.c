@@ -12,6 +12,9 @@ void plop(int sig, siginfo_t *info, void *ctx)
     kill(getpid(), SIGKILL);
 }
 
+/* Setting up Signal Handler */
+// to complete
+
 /* Dynamic Library Constructor */
 static void lib_init(void) {
 	struct sigaction act;

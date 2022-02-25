@@ -30,7 +30,7 @@ TESTS: loop
 # ==================== RUN TESTS ====================
 check: Inspection TESTS
 	bin/inspection bin/loop
-#LD_PRELOAD=./lib/libinspection.so bin/loop
+
 
 # CLEAN
 clean:
