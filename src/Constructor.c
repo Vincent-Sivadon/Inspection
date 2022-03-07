@@ -1,15 +1,18 @@
 #include "Constructor.h"
+#include "Core.h"
 
 #include <signal.h>
 #include <string.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <stdlib.h>
+
 
 void plop(int sig, siginfo_t *info, void *ctx)
 {
-	printf("\nSIGINT :'(\n");
-
-    kill(getpid(), SIGKILL);
+	printf("\nINTERRUPTION\n\n");
+	getInput();
+	exit(0);
 }
 
 /* Setting up Signal Handler */
@@ -24,7 +27,14 @@ static void lib_init(void) {
 	act.sa_sigaction = plop;
 
 	if( sigaction(SIGINT, &act, NULL) )
-		perror("sigaction");
+		perror("sigaction error");
+
+	pid = getpid();
+
+    // User input (decides to run the prog)
+    printf("\n--- Inspection ---\n\n");
+    fflush(stdout);
+    getInput();
 
     return;
 }
