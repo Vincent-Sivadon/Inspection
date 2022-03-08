@@ -12,3 +12,6 @@ void getGeneralInfos();
 
 /* Print the values of category "name" in /proc/[pid]/status */
 void getInfo(const char * name);
+
+/* Print memory usage */
+void getMemoryUsage();

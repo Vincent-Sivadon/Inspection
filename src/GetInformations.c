@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/resource.h>
 
 /* print general process informations */
 void getGeneralInfos()
@@ -49,4 +50,12 @@ void getInfo(const char * name)
     // Free memory
     free(status_path);
     fclose(status_file);
+}
+
+/* Print memory usage */
+void getMemoryUsage()
+{
+    struct rusage usage;
+    getrusage(RUSAGE_SELF, &usage);
+    printf("Memory Usage : %ld kilobytes\n", usage.ru_maxrss);
 }

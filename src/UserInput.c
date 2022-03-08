@@ -15,6 +15,7 @@
 #define GETPPID 229466957252050
 #define GETGID 6953544149113
 #define GETNAME 229466957163974
+#define GETMEM 6953544155524
 
 int pre_inspection = 1;
 int inspection = 1;
@@ -73,6 +74,9 @@ void getPreIspInput()
             case GETNAME:
                 getInfo("Name");
                 break;
+            case GETMEM:
+                getMemoryUsage();
+                break;
 
             case HELP:
                 printf("\n===========COMMANDES===========\n\n");
@@ -103,7 +107,6 @@ void getIspInput()
         
         // Process user input
         unsigned long long i = string_hash(input);
-        //printf("hash : %llu\n", i);
 
         switch (i)
         {
@@ -129,6 +132,9 @@ void getIspInput()
                 break;
             case GETNAME:
                 getInfo("Name");
+                break;
+            case GETMEM:
+                getMemoryUsage();
                 break;
 
             case HELP:
