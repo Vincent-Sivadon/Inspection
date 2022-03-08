@@ -1,4 +1,5 @@
 #pragma once
 
 #include "Constructor.h"
-#include "Core.h"
+#include "GetInformations.h"
+#include "UserInput.h"

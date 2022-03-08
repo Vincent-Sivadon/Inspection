@@ -1,36 +1,57 @@
 CC=gcc
 
-# Directories
-SRC_LIB=src/Constructor.c src/Core.c
-SRC_BIN=src/Inspection.c
-LIB=/usr/local/lib/libinspection.so
+# INCLUDE
+HEADER_FILES=./include/*
+HEADER_DIR=./include/
+
+# SOURCES
+SRC_FILES=./src/*
+SRC_DIR=./src/
+
+# DESTINATION
+LIB_DEST=/usr/local/lib
+LIB_HEADER_DEST=/usr/local/include/Inspection/
+LIB_BIN_DEST=/usr/local/bin
 
 # Compilation flags
-CFLAGS_LIB=-Wall -I./include/ -fPIC -shared
+CFLAGS_LIB=-Wall -I$(HEADER_DIR) -fPIC -shared
 
 
 # =============== LIBRARY INSTALLATION ===============
-install: $(SRC_LIB) $(SRC_BIN) include/*
-	$(CC) $(CFLAGS_LIB) $(SRC_LIB) -o /usr/local/lib/libinspection.so
-	cp -R include/ /usr/local/include/Inspection/
-	$(CC) src/Inspection.c -o /usr/local/bin/inspection -linspection
+
+# Creates Inspection library
+# Copy header files in destination
+# Create inspection binary
+install: Inspection.c $(SRC_FILES) $(HEADER_FILES)
+	$(CC) $(CFLAGS_LIB) $(SRC_FILES) -o $(LIB_DEST)/libinspection.so
+	cp -R $(HEADER_DIR) $(LIB_HEADER_DEST)
+	$(CC) Inspection.c -o $(LIB_BIN_DEST)/inspection
+
+# Remove .so library file
+# Remove header file directory
+# Remove inspection binary
 uninstall:
-	rm -f /usr/local/lib/libinspection.so
-	rm -r /usr/local/include/Inspection/
-	rm -f /usr/local/bin/inspection
+	rm -f $(LIB_DEST)/libinspection.so
+	rm -r $(LIB_HEADER_DEST)
+	rm -f $(LIB_BIN_DEST)/inspection
 
 
 # ====================== TESTS ======================
+
+# Infinite loop
 loop: test/loop.c
 	$(CC) $< -o bin/loop
+
+# SIGITN raise
 sigint: test/sigint.c
 	$(CC) $< -o bin/sigint
 
+# ALL tests target
 TESTS: sigint
 
 
 # ==================== RUN TESTS ====================
-check: $(SRC_LIB) $(SRC_BIN) $(INC) TESTS
+check: TESTS
 	inspection bin/sigint
 
 

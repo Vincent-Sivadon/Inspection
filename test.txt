@@ -1,2 +1,0 @@
-Bonjour: abc
-Aurevoir: 012 2

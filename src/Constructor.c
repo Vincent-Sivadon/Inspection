@@ -1,5 +1,6 @@
 #include "Constructor.h"
-#include "Core.h"
+#include "GetInformations.h"
+#include "UserInput.h"
 
 #include <signal.h>
 #include <string.h>
@@ -11,7 +12,7 @@
 void plop(int sig, siginfo_t *info, void *ctx)
 {
 	printf("\nINTERRUPTION\n\n");
-	getInput();
+	getIspInput();
 	exit(0);
 }
 
@@ -29,12 +30,13 @@ static void lib_init(void) {
 	if( sigaction(SIGINT, &act, NULL) )
 		perror("sigaction error");
 
+	// We need the pid to eventually get to /proc/[pid]/status
 	pid = getpid();
 
     // User input (decides to run the prog)
-    printf("\n--- Inspection ---\n\n");
+    printf("\n================ Inspection ================\n\n");
     fflush(stdout);
-    getInput();
+    getPreIspInput();
 
     return;
 }
