@@ -15,3 +15,9 @@ void getInfo(const char * name);
 
 /* Print memory usage */
 void getMemoryUsage();
+
+/* Read ELF file to get symbol list */
+void getSymbolList();
+
+/* */
+void getBacktrace();

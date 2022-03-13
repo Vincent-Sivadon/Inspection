@@ -7,12 +7,13 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <execinfo.h>
 
 
-void plop(int sig, siginfo_t *info, void *ctx)
+static void plop(int sig, siginfo_t *info, void *ctx)
 {
 	printf("\nINTERRUPTION\n\n");
-	getIspInput();
+	getInput(1);
 	exit(0);
 }
 
@@ -36,7 +37,7 @@ static void lib_init(void) {
     // User input (decides to run the prog)
     printf("\n================ Inspection ================\n\n");
     fflush(stdout);
-    getPreIspInput();
+    getInput(0);
 
     return;
 }

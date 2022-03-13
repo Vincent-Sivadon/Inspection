@@ -40,11 +40,11 @@ uninstall:
 
 # Infinite loop
 loop: test/loop.c
-	$(CC) $< -o bin/loop
+	$(CC) -g -rdynamic $< -o bin/loop
 
 # SIGITN raise
 sigint: test/sigint.c
-	$(CC) $< -o bin/sigint
+	$(CC) -g -rdynamic $< -o bin/sigint
 
 # ALL tests target
 TESTS: sigint
