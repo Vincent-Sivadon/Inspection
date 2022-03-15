@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <signal.h>
+
 
 int main(void) {
     printf("Calling the fopen() function...\n");
@@ -9,7 +11,9 @@ int main(void) {
         return 1;
     }
 
-    printf("fopen() succeeded\n");
+    raise(SIGINT);    
+
+    fclose(fd);
 
     return 0;
 }

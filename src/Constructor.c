@@ -43,7 +43,8 @@ static void lib_init(void) {
 
 static void lib_close(void)
 {
-	printf("Malloc not cleaned : %d", nMalloc);
-	printf("\n============================================\n\n");
+	printf("Malloc not yet cleaned : %d\n", nMalloc);
+	printf("Files not yet closed : %d\n", nFiles);
+	printf("==============================================\n\n");
 	fflush(stdout);
 }

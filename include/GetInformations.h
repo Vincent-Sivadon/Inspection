@@ -11,7 +11,3 @@ void getSymbolList();
 
 /* */
 void getBacktrace();
-
-//int puts(const char * s);
-//FILE *fopen(const char *path, const char *mode);
-

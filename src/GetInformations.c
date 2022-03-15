@@ -130,25 +130,3 @@ void getBacktrace()
 
 	free(strings);
 }
-
-/*
-int puts(const char * s)
-{
-	int (*original_puts)(const char*);
-	original_puts = dlsym(RTLD_NEXT, "puts");
-	(*original_puts)("hahaha");
-	return 0;
-}
-*/
-
-
-/*
-FILE *fopen(const char *path, const char *mode) {
-    printf("In our own fopen, opening %s\n", path);
-
-    FILE *(*original_fopen)(const char*, const char*);
-    original_fopen = dlsym(RTLD_NEXT, "fopen");
-    return (*original_fopen)(path, mode);
-}
-*/
-

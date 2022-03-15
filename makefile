@@ -46,6 +46,10 @@ loop: test/loop.c
 sigint: test/sigint.c
 	$(CC) -g -rdynamic $< -o bin/sigint
 
+# File
+fopen: test/fopen.c
+	$(CC) -g -rdynamic $< -o bin/fopen
+
 # ALL tests target
 TESTS: sigint
 

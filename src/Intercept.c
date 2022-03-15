@@ -27,3 +27,20 @@ void free(void * ptr)
     //fprintf(stderr, "free\n");
 
 }
+
+
+FILE *fopen(const char *path, const char *mode) {
+    nFiles++;
+
+    FILE *(*original_fopen)(const char*, const char*);
+    original_fopen = dlsym(RTLD_NEXT, "fopen");
+    return (*original_fopen)(path, mode);
+}
+
+int fclose(FILE * stream) {
+    nFiles--;
+
+    int (*original_fclose)(FILE *);
+    original_fclose = dlsym(RTLD_NEXT, "fclose");
+    return (*original_fclose)(stream);
+}
