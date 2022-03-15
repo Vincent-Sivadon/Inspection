@@ -7,17 +7,18 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define INFO 177678
+#define ID 5863474
 #define HELP 6385292014
 #define QUIT 6385632776
 #define RUN 193505114
-#define GETPID 6953544158914
-#define GETPPID 229466957252050
-#define GETGID 6953544149113
-#define GETNAME 229466957163974
-#define GETMEM 6953544155524
+#define GETPID 193502530
+#define GETPPID 6385591378
+#define GETGID 193492729
+#define GETNAME 6385503302
+#define GETMEM 193499140
 #define NM 5863648
 #define BT 5863259
+#define DATA 6385144159
 
 static unsigned char input[10];
 
@@ -33,6 +34,21 @@ unsigned long string_hash(unsigned char *str)
     return hash;
 }
 
+void printHelp()
+{
+    printf("\n--------------------COMMANDES--------------------\n\n");
+    printf("- id (PID, PPID, GID)\n");
+    printf("- run\n");
+    printf("- quit\n");
+    printf("- pid\n");
+    printf("- ppid\n");
+    printf("- gid\n");
+    printf("- mem (memory informations)\n");
+    printf("- bt (stack backtrace)\n");
+    printf("- nm (symbols)\n");
+    printf("- name\n\n");
+    printf("---------------------------------------------------\n\n");
+}
 /* Ask and process user input */
 void getInput(int state)
 {
@@ -61,23 +77,28 @@ void getInput(int state)
                 break;
 
             // INFORMATIONS
-            case INFO:
-                getGeneralInfos();
+            case ID:
+                getStatusInfo("Pid", "PID");
+                getStatusInfo("PPid", "PPID");
+                getStatusInfo("Gid", "GID");
                 break;
             case GETPID:
-                getInfo("Pid");
+                getStatusInfo("Pid", "PID");
                 break;
             case GETPPID:
-                getInfo("PPid");
+                getStatusInfo("PPid", "PPID");
                 break;
             case GETGID:
-                getInfo("Gid");
+                getStatusInfo("Gid", "GID");
                 break;
             case GETNAME:
-                getInfo("Name");
+                getStatusInfo("Name", "Program name");
                 break;
             case GETMEM:
-                getMemoryUsage();
+                getStatusInfo("VmPeak", "Virtual memory (peak)    size");
+                getStatusInfo("VmSize", "Virtual memory (current) size");
+                getStatusInfo("VmData", "Virtual memory (data)    size");
+                getStatusInfo("VmStk",  "Virtual memory (stack)   size");
                 break;
             case NM:
                 getSymbolList();
@@ -89,12 +110,7 @@ void getInput(int state)
 
 
             case HELP:
-                printf("\n===========COMMANDES===========\n\n");
-                printf("=> i (donne des informations générales)\n");
-                printf("=> run (lance le programme)\n");
-                printf("=> quit (quitte le programme)\n");
-                printf("=> get* (va cherche l'information * dans /proc/status/, exemple : getname)\n\n");
-                printf("===============================\n\n");
+                printHelp();
                 break;
 
             default:

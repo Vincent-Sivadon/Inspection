@@ -23,9 +23,9 @@ CFLAGS_LIB=-Wall -I$(HEADER_DIR) -fPIC -shared
 # Copy header files in destination
 # Create inspection binary
 install: Inspection.c $(SRC_FILES) $(HEADER_FILES)
-	$(CC) $(CFLAGS_LIB) $(SRC_FILES) -o $(LIB_DEST)/libinspection.so
+	$(CC) $(CFLAGS_LIB) $(SRC_FILES) -o $(LIB_DEST)/libinspection.so -ldl
 	cp -R $(HEADER_DIR) $(LIB_HEADER_DEST)
-	$(CC) Inspection.c -o $(LIB_BIN_DEST)/inspection
+	$(CC) -g Inspection.c -o $(LIB_BIN_DEST)/inspection -ldl
 
 # Remove .so library file
 # Remove header file directory

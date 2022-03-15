@@ -1,6 +1,7 @@
 #include "Constructor.h"
 #include "GetInformations.h"
 #include "UserInput.h"
+#include "Intercept.h"
 
 #include <signal.h>
 #include <string.h>
@@ -8,7 +9,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <execinfo.h>
-
 
 static void plop(int sig, siginfo_t *info, void *ctx)
 {
@@ -22,6 +22,8 @@ static void plop(int sig, siginfo_t *info, void *ctx)
 
 /* Dynamic Library Constructor */
 static void lib_init(void) {
+	nMalloc = -2;
+
 	struct sigaction act;
 
 	memset(&act, 0, sizeof(struct sigaction));
@@ -31,13 +33,17 @@ static void lib_init(void) {
 	if( sigaction(SIGINT, &act, NULL) )
 		perror("sigaction error");
 
-	// We need the pid to eventually get to /proc/[pid]/status
-	pid = getpid();
-
     // User input (decides to run the prog)
     printf("\n================ Inspection ================\n\n");
     fflush(stdout);
     getInput(0);
 
     return;
+}
+
+static void lib_close(void)
+{
+	printf("Malloc not cleaned : %d", nMalloc);
+	printf("\n============================================\n\n");
+	fflush(stdout);
 }

@@ -1,23 +1,17 @@
 #pragma once
 
 #include <sys/types.h>
-
-/* Process informations */
-pid_t pid;
-pid_t ppid;
-pid_t gid;
-
-/* print general process informations */
-void getGeneralInfos();
+#include <stdio.h>
 
 /* Print the values of category "name" in /proc/[pid]/status */
-void getInfo(const char * name);
-
-/* Print memory usage */
-void getMemoryUsage();
+void getStatusInfo(const char * name, const char * message);
 
 /* Read ELF file to get symbol list */
 void getSymbolList();
 
 /* */
 void getBacktrace();
+
+//int puts(const char * s);
+//FILE *fopen(const char *path, const char *mode);
+

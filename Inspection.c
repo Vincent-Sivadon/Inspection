@@ -26,5 +26,7 @@ int main(int argc, char **argv)
     // Run prog
     execve(argv[1],args,envs);
 
+    free(env);
+
     return 0;
 }

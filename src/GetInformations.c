@@ -12,39 +12,16 @@
 #include <sys/mman.h>
 #include <execinfo.h>
 
-#define _GNU_SOURCE
-#include <dlfcn.h>
 
-
-/* print general process informations */
-void getGeneralInfos()
+/* Print the values of category "name" in /proc/self/status */
+void getStatusInfo(const char * name, const char * message)
 {
-    // Get informations
-    ppid = getppid();
-    gid = getgid();
-
-    // Print them
-    printf("Process ID         : %d\n", pid);
-    printf("Parent Process ID  : %d\n", ppid);
-    printf("Group Process ID   : %d\n", gid);
-    fflush(stdout);
-}
-
-/* Print the values of category "name" in /proc/[pid]/status */
-void getInfo(const char * name)
-{
-    // Construct /proc/pid/status PATH
-    char str_pid[10]; sprintf(str_pid, "%d", pid);  // int to string
-    char * str_proc = "/proc/";
-    char * str_status = "/status";
-    char * status_path = malloc(strlen(str_proc) + strlen(str_pid) + strlen(str_status));
-    strcat(status_path, str_proc);
-    strcat(status_path, str_pid);
-    strcat(status_path, str_status);
-
-    // Read file
+    // Open /proc/self/status file
+    char * status_path = "/proc/self/status";
     FILE* status_file = fopen(status_path, "r");
-    if (!status_file) perror("can't open /proc/[pid]/status");
+    if (!status_file) perror("can't open /proc/self/status");
+
+	// Read file until we found name
     char line[100], current_name[10]; char values[20];
     do
     {
@@ -54,20 +31,11 @@ void getInfo(const char * name)
     } while ( strcmp(name,current_name) );
 
     // Display information
-    printf("%s: %s", name, values);
+    printf("%s: %s", message, values);
     fflush(stdout);
 
     // Free memory
-    free(status_path);
     fclose(status_file);
-}
-
-/* Print memory usage */
-void getMemoryUsage()
-{
-    struct rusage usage;
-    getrusage(RUSAGE_SELF, &usage);
-    printf("Memory Usage : %ld kilobytes\n", usage.ru_maxrss);
 }
 
 /* Read ELF file to get symbols list */
@@ -138,6 +106,7 @@ void getSymbolList()
 		if (strncmp(ignore, strtab + symtab[i].st_name, 1) != 0) printf("%s\n", strtab + symtab[i].st_name);
 }
 
+
 /* */
 void getBacktrace()
 {
@@ -161,3 +130,25 @@ void getBacktrace()
 
 	free(strings);
 }
+
+/*
+int puts(const char * s)
+{
+	int (*original_puts)(const char*);
+	original_puts = dlsym(RTLD_NEXT, "puts");
+	(*original_puts)("hahaha");
+	return 0;
+}
+*/
+
+
+/*
+FILE *fopen(const char *path, const char *mode) {
+    printf("In our own fopen, opening %s\n", path);
+
+    FILE *(*original_fopen)(const char*, const char*);
+    original_fopen = dlsym(RTLD_NEXT, "fopen");
+    return (*original_fopen)(path, mode);
+}
+*/
+
