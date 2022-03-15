@@ -22,7 +22,8 @@ static void plop(int sig, siginfo_t *info, void *ctx)
 
 /* Dynamic Library Constructor */
 static void lib_init(void) {
-	nMalloc = -2;
+	nMalloc = (Nmalloc*) malloc(sizeof(Nmalloc));
+	nMalloc->N = -2;
 
 	struct sigaction act;
 
