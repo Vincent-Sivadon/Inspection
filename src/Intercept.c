@@ -10,7 +10,6 @@ void* malloc(size_t size)
         real_malloc = dlsym(RTLD_NEXT, "malloc");
 
     void *p = real_malloc(size);
-    //fprintf(stderr, "malloc\n");
     nMalloc++;
 
     return p;
@@ -23,9 +22,7 @@ void free(void * ptr)
         real_free = dlsym(RTLD_NEXT, "free");
     
     real_free(ptr);
-    nMalloc--;
-    //fprintf(stderr, "free\n");
-
+    nFree++;
 }
 
 

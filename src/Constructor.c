@@ -2,6 +2,7 @@
 #include "GetInformations.h"
 #include "UserInput.h"
 #include "Intercept.h"
+#include "SignalHandler.h"
 
 #include <signal.h>
 #include <string.h>
@@ -10,58 +11,14 @@
 #include <stdlib.h>
 #include <execinfo.h>
 
-static void signalHandler(int sig, siginfo_t *info, void *ctx)
-{
-	char * msg = malloc(60);
-	char * addr = malloc(30);
-
-	// Determines wich message to print depending on the signal received
-	switch(sig)
-	{
-		case SIGINT:
-			msg = "SIGINT received : program interrupted at\n";
-			break;
-
-		case SIGTRAP:
-			msg = "SIGTRAP received : program trapped at\n";
-			break;
-	}
-
-	// Assmebling message
-	sprintf(addr,"%p",info->si_addr);
-	//strncat(msg, addr, 50);
-
-	// Print message and informations to terminal (printf not recommended)
-	write(STDOUT_FILENO, msg, strlen(msg));
-	write(STDOUT_FILENO, addr, strlen(addr));
-	write(STDOUT_FILENO, "\n", 2);
-
-	// free(msg); seg fault ?
-	nMalloc--;
-	free(addr);
-
-	getInput(1);
-
-	exit(0);
-}
-
-/* Setting up Signal Handler */
-// to complete
-
 /* Dynamic Library Constructor */
 static void lib_init(void) {
-	nMalloc = -2;
+	nMalloc = 0; // inspection loading implies 2 malloc
 
 	struct sigaction act;
-
 	memset(&act, 0, sizeof(struct sigaction));
-
-	act.sa_sigaction = signalHandler;
-
-	if( sigaction(SIGINT, &act, NULL) )
-		perror("sigaction error");
-	if( sigaction(SIGTRAP, &act, NULL) )
-		perror("sigaction error");
+	act.sa_sigaction = terminaisonHandler;
+	handlerSetUp(&act);
 
     // User input (decides to run the prog)
     printf("\n================ Inspection ================\n\n");
@@ -71,10 +28,14 @@ static void lib_init(void) {
     return;
 }
 
+/* Dynamic Library Destructor */
 static void lib_close(void)
 {
-	printf("Malloc not yet cleaned : %d\n", nMalloc);
+	printf("\n------------------------------\n");
+	printf("Number of malloc : %d\n", nMalloc);
+	printf("Number of free : %d\n", nFree);
 	printf("Files not yet closed : %d\n", nFiles);
-	printf("==============================================\n\n");
+	printf("------------------------------\n");
+	printf("\n==============================================\n\n");
 	fflush(stdout);
 }

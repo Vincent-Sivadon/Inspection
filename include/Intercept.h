@@ -6,6 +6,7 @@
 #include <stdio.h>
 
 int nMalloc;
+int nFree;
 int nFiles;
 
 void *malloc(size_t size);
