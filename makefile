@@ -50,6 +50,10 @@ sigint: test/sigint.c
 fopen: test/fopen.c
 	$(CC) -g -rdynamic $< -o bin/fopen
 
+# Multiple Signals
+signals: test/signals.c
+	$(CC) -g -rdynamic $< -o bin/signals
+
 # ALL tests target
 TESTS: sigint
 

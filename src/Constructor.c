@@ -10,10 +10,38 @@
 #include <stdlib.h>
 #include <execinfo.h>
 
-static void plop(int sig, siginfo_t *info, void *ctx)
+static void signalHandler(int sig, siginfo_t *info, void *ctx)
 {
-	printf("\nINTERRUPTION\n\n");
+	char * msg = malloc(60);
+	char * addr = malloc(30);
+
+	// Determines wich message to print depending on the signal received
+	switch(sig)
+	{
+		case SIGINT:
+			msg = "SIGINT received : program interrupted at\n";
+			break;
+
+		case SIGTRAP:
+			msg = "SIGTRAP received : program trapped at\n";
+			break;
+	}
+
+	// Assmebling message
+	sprintf(addr,"%p",info->si_addr);
+	//strncat(msg, addr, 50);
+
+	// Print message and informations to terminal (printf not recommended)
+	write(STDOUT_FILENO, msg, strlen(msg));
+	write(STDOUT_FILENO, addr, strlen(addr));
+	write(STDOUT_FILENO, "\n", 2);
+
+	// free(msg); seg fault ?
+	nMalloc--;
+	free(addr);
+
 	getInput(1);
+
 	exit(0);
 }
 
@@ -28,9 +56,11 @@ static void lib_init(void) {
 
 	memset(&act, 0, sizeof(struct sigaction));
 
-	act.sa_sigaction = plop;
+	act.sa_sigaction = signalHandler;
 
 	if( sigaction(SIGINT, &act, NULL) )
+		perror("sigaction error");
+	if( sigaction(SIGTRAP, &act, NULL) )
 		perror("sigaction error");
 
     // User input (decides to run the prog)
