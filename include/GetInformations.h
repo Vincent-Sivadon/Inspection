@@ -11,3 +11,6 @@ void getSymbolList();
 
 /* */
 void getBacktrace();
+
+/* */
+void ldd();

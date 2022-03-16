@@ -11,6 +11,7 @@
 #include <sys/stat.h>
 #include <sys/mman.h>
 #include <execinfo.h>
+#include <sys/wait.h>
 
 
 /* Print the values of category "name" in /proc/self/status */
@@ -129,4 +130,21 @@ void getBacktrace()
 		if (strncmp(strings[j], isp, strlen(isp)) != 0) printf("%s\n", strings[j]);
 
 	free(strings);
+}
+
+/* */
+void ldd()
+{
+	pid_t child = fork();
+
+	if (child == 0)
+	{
+		// We need to specify LD_PRELOAD empty, or else it will load
+		// again the Inspection library
+    	char *const args[] = {"sh", "-c", "ldd bin/signals",NULL};
+    	char *const envs[] = {"LD_PRELOAD=",NULL};
+    	execve("/bin/sh",args,envs);
+	} else {
+		wait(NULL);
+	}
 }

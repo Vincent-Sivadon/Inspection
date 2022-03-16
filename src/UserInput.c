@@ -19,6 +19,7 @@
 #define NM 5863648
 #define BT 5863259
 #define DATA 6385144159
+#define LDD 193498009
 
 static unsigned char input[10];
 
@@ -106,6 +107,9 @@ void getInput(int state)
             case BT:
                 if (state == 0) printf("The program hasn't started yet, try 'help' for more informations\n");
                 if (state == 1) getBacktrace();
+                break;
+            case LDD:
+                ldd();
                 break;
 
 
