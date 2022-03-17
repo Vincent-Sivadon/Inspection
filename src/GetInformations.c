@@ -1,3 +1,5 @@
+/* Implementation of functions called to get and print informations on the executable */
+
 #include "GetInformations.h"
 
 #include <stdio.h>
@@ -42,6 +44,7 @@ void getStatusInfo(const char * name, const char * message)
 /* Read ELF file to get symbols list */
 void getSymbolList()
 {
+	//
 	void* start = NULL;
 	int i, fd;
 	struct stat stat;
@@ -52,6 +55,7 @@ void getSymbolList()
     char name[1024];
     int ret;
 
+	// Get resolved symbolic links
     ret = readlink("/proc/self/exe",name,sizeof(name)-1);
     if(ret ==-1) {
         perror("readlink");
@@ -59,15 +63,15 @@ void getSymbolList()
     }
     name[ret] = 0;
 
-	// ouverture du fichier (pour être mappé)
+	// Open file
 	fd = open(name, O_RDONLY, 660);
 	if(fd < 0)
 		perror("open");
 
-	// récupération de la taille du fichier
+	// Get size
 	fstat(fd, &stat);
 
-	//projection du fichier (MAP_SHARED importe peu ici)
+	// Mapping : memory projection
 	start = mmap(0, stat.st_size, PROT_READ , MAP_FILE | MAP_SHARED, fd, 0);
 	if(start == MAP_FAILED)
 	{
@@ -75,40 +79,40 @@ void getSymbolList()
 		abort();
 	}
 
-	// le premier octet mappé est le premier octet du fichier ELF
-	// Via un cast, on va pouvoir manipuler le fichier ELF mappé en mémoire
+	// Getting header (ELF file beginning) from mapped ELF file
+	// Casting to use <elf.h> library to analyse it's content
 	Elf64_Ehdr* hdr = (Elf64_Ehdr *) start;
+
+	// Symbols tab
 	Elf64_Sym* symtab;
 
-	// le header contient un champ donnant l'offset (en octet) où se trouve
-	// les sections headers
+	// Getting the offset for each sections defined in the header
 	Elf64_Shdr* sections = (Elf64_Shdr *)((char *)start + hdr->e_shoff);
 
-	// parcours des sections
+	// Run through all sections
 	for (i = 0; i < hdr->e_shnum; i++)
 	{
-		// si la section courante est de type 'table de symbole'
+		// If the current session is of type SYMTAB
 		if (sections[i].sh_type == SHT_SYMTAB) {
-			// on sauvegarde:
-			// 1. le pointeur sur la table de symboles
-			// 2. Le nombre de symboles dans cette table
+			// Storing the offset for that sections
 			symtab = (Elf64_Sym *)((char *)start + sections[i].sh_offset);
+
+			// Storing size of the section
 			nb_symbols = sections[i].sh_size / sections[i].sh_entsize;
 
+			// 
 			strtab = (char*)((char*)start + sections[sections[i].sh_link].sh_offset);
 		}
 	}
 
-	// on parcourt alors la table des symboles
-	// pour chaque entrée, le champ st_name est un offset en octet depuis 
-	// le début du tableau où se trouve le nom.
 	char * ignore = "_";
+	// Run through all symbols
 	for (i = 0; i < nb_symbols; ++i)
 		if (strncmp(ignore, strtab + symtab[i].st_name, 1) != 0) printf("%s\n", strtab + symtab[i].st_name);
 }
 
 
-/* */
+/* Displays Stack Trace */
 void getBacktrace()
 {
 	int size = 10;
@@ -132,7 +136,7 @@ void getBacktrace()
 	free(strings);
 }
 
-/* */
+/* Get linked shared libraries */
 void ldd()
 {
 	pid_t child = fork();

@@ -46,13 +46,9 @@ loop: test/loop.c
 sigint: test/sigint.c
 	$(CC) -g -rdynamic $< -o bin/sigint
 
-# File
+# File opening
 fopen: test/fopen.c
 	$(CC) -g -rdynamic $< -o bin/fopen
-
-# Multiple Signals
-signals: test/signals.c
-	$(CC) -g -rdynamic $< -o bin/signals
 
 # ALL tests target
 TESTS: sigint

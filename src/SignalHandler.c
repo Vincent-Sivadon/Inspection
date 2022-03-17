@@ -1,3 +1,5 @@
+/* Implementation of signal handler */
+
 #include "SignalHandler.h"
 #include "UserInput.h"
 
@@ -22,10 +24,6 @@ void terminaisonHandler(int sig, siginfo_t *info, void *ctx)
 		case SIGTRAP:
 			msg = "SIGTRAP received : program trapped at\n";
 			break;
-
-		case SIGKILL:
-			msg = "SIGKILL received : program killed at\n";
-			break;
 			
 		case SIGILL:
 			msg = "SIGILL received : illegal instruction at\n";
@@ -42,7 +40,6 @@ void terminaisonHandler(int sig, siginfo_t *info, void *ctx)
 
 	// Assmebling message
 	sprintf(addr,"%p",info->si_addr);
-	//strncat(msg, addr, 50);
 
 	// Print message and informations to terminal (printf not recommended)
 	write(STDOUT_FILENO, msg, strlen(msg));
@@ -63,8 +60,6 @@ void handlerSetUp(struct sigaction *act)
 	if( sigaction(SIGINT, act, NULL) )
 		perror("sigaction error");
 	if( sigaction(SIGTRAP, act, NULL) )
-		perror("sigaction error");
-	if( sigaction(SIGKILL, act, NULL) )
 		perror("sigaction error");
 	if( sigaction(SIGILL, act, NULL) )
 		perror("sigaction error");

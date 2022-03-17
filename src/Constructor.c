@@ -1,3 +1,8 @@
+/*
+ *	Implementation of dynamic constructor and destructor of inspection library
+ *	It allows us to set up signal handler and ask for input from user
+ */
+
 #include "Constructor.h"
 #include "GetInformations.h"
 #include "UserInput.h"
@@ -11,7 +16,13 @@
 #include <stdlib.h>
 #include <execinfo.h>
 
-/* Dynamic Library Constructor */
+/*
+ *  Dynamic Library Constructor
+ *  ---------------------------
+ *  signal handler set up
+ *  ask for user input
+ *  we leave constructor only if user typed "run"
+ */
 static void lib_init(void) {
 	nMalloc = 0; // inspection loading implies 2 malloc
 
@@ -28,7 +39,11 @@ static void lib_init(void) {
     return;
 }
 
-/* Dynamic Library Destructor */
+/*
+ *  Dynamic Library Destructor
+ *  --------------------------
+ *  print number of malloc, free, and file oppened
+ */
 static void lib_close(void)
 {
 	printf("\n------------------------------\n");

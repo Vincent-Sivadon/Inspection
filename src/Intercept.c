@@ -1,8 +1,11 @@
+/* Implementation of interceptions of libc functions */
+
 #include "Intercept.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 
+/* malloc interception that counts each time it's called */
 void* malloc(size_t size)
 {
     static void* (*real_malloc)(size_t) = NULL;
@@ -15,6 +18,7 @@ void* malloc(size_t size)
     return p;
 }
 
+/* free interception that counts each time it's called */
 void free(void * ptr)
 {
     static void (*real_free)(void *) = NULL;
@@ -25,7 +29,7 @@ void free(void * ptr)
     nFree++;
 }
 
-
+/* fopen interception that counts each time it's called */
 FILE *fopen(const char *path, const char *mode) {
     nFiles++;
 
@@ -34,6 +38,7 @@ FILE *fopen(const char *path, const char *mode) {
     return (*original_fopen)(path, mode);
 }
 
+/* fclose interception that decrement the count of file oppened each time it's called */
 int fclose(FILE * stream) {
     nFiles--;
 

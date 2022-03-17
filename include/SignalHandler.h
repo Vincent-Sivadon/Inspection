@@ -1,3 +1,5 @@
+/* Header for signal handler */
+
 #pragma once
 
 #include <signal.h>

@@ -1,8 +1,4 @@
-/*
-    Source code that will generate the executable "inspection"
-    used to analyse a binary like
-        - inspection binary
-*/
+/* Source Code that will generate the inspection executable */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,7 +25,7 @@ int main(int argc, char **argv)
     char *const args[] = {binary, NULL};
     char *const envs[] = {env,NULL};
 
-    // Run binary
+    // Run prog
     execve(argv[1],args,envs);
 
     free(env);
